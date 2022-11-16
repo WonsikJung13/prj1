@@ -36,7 +36,12 @@ dependencies {
 	implementation platform('software.amazon.awssdk:bom:2.18.6')
 	implementation 'software.amazon.awssdk:s3'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs
+	implementation 'org.springframework.security:spring-security-taglibs'
+
+
 
 }
 

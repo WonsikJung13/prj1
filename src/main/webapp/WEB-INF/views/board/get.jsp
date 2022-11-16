@@ -1,16 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8" %>
 <%@ page import="java.net.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My First Project</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
 <my:navBar/>
@@ -25,9 +29,16 @@
                 <c:url value="/board/modify" var="modifyLink">
                     <c:param name="id" value="${board.id }"></c:param>
                 </c:url>
-                <a class="btn btn-warning" href="${modifyLink }">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </a>
+
+                    <sec:authentication property="name" var="username"/>
+                    <c:if test="${board.writer == username}">
+
+                    <a class="btn btn-warning" href="${modifyLink }">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+
+                    </c:if>
+
             </h1>
 
             <div class="mb-3">
@@ -48,7 +59,8 @@
             <div>
                 <c:forEach items="${board.fileName }" var="name">
                     <div>
-                        <img class="img-fluid img-thumbnail" src="${imgUrl }/${board.id }/${URLEncoder.encode(name, 'utf-8')}" alt="">
+                        <img class="img-fluid img-thumbnail"
+                             src="${imgUrl }/${board.id }/${URLEncoder.encode(name, 'utf-8')}" alt="">
                     </div>
                 </c:forEach>
             </div>
@@ -75,7 +87,8 @@
 <hr>
 
 <%-- 댓글 메시지 토스트 --%>
-<div id="replyMessageToast" class="toast align-items-center top-0 start-50 translate-middle-x position-fixed" role="alert" aria-live="assertive" aria-atomic="true">
+<div id="replyMessageToast" class="toast align-items-center top-0 start-50 translate-middle-x position-fixed"
+     role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
         <div id="replyMessage1" class="toast-body">
             Hello, world! This is a toast message.
@@ -92,13 +105,18 @@
     </div>
     <div class="row">
         <div class="col">
+
+            <sec:authorize access="isAuthenticated()">
+
             <%-- 댓글 작성 --%>
             <input type="hidden" id="boardId" value="${board.id }">
 
             <div class="input-group">
                 <input type="text" class="form-control" id="replyInput1">
-                <button class="btn btn-outline-secondary" id="replySendButton1"><i class="fa-solid fa-reply"></i></button>
+                <button class="btn btn-outline-secondary" id="replySendButton1"><i class="fa-solid fa-reply"></i>
+                </button>
             </div>
+            </sec:authorize>
         </div>
     </div>
 
@@ -114,7 +132,8 @@
 
 <%-- 댓글 삭제 확인 모달 --%>
 <!-- Modal -->
-<div class="modal fade" id="removeReplyConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="removeReplyConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -126,7 +145,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" data-bs-dismiss="modal" id="removeConfirmModalSubmitButton" class="btn btn-danger">삭제</button>
+                <button type="button" data-bs-dismiss="modal" id="removeConfirmModalSubmitButton"
+                        class="btn btn-danger">삭제
+                </button>
             </div>
         </div>
     </div>
@@ -146,13 +167,17 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" data-bs-dismiss="modal" id="modifyFormModalSubmitButton" class="btn btn-primary">수정</button>
+                <button type="button" data-bs-dismiss="modal" id="modifyFormModalSubmitButton" class="btn btn-primary">
+                    수정
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
 <script>
     const ctx = "${pageContext.request.contextPath}";
 
@@ -161,17 +186,17 @@
     // 댓글 crud 메시지 토스트
     const toast = new bootstrap.Toast(document.querySelector("#replyMessageToast"));
 
-    document.querySelector("#modifyFormModalSubmitButton").addEventListener("click", function() {
+    document.querySelector("#modifyFormModalSubmitButton").addEventListener("click", function () {
         const content = document.querySelector("#modifyReplyInput").value;
         const id = this.dataset.replyId;
         const data = {id, content};
 
         fetch(`\${ctx}/reply/modify`, {
-            method : "put",
-            headers : {
-                "Content-Type" : "application/json"
+            method: "put",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body : JSON.stringify(data)
+            body: JSON.stringify(data)
         })
             .then(res => res.json())
             .then(data => {
@@ -181,7 +206,7 @@
             .then(() => listReply());
     });
 
-    document.querySelector("#removeConfirmModalSubmitButton").addEventListener("click", function() {
+    document.querySelector("#removeConfirmModalSubmitButton").addEventListener("click", function () {
         removeReply(this.dataset.replyId);
     });
 
@@ -229,7 +254,7 @@
                     replyListContainer.insertAdjacentHTML("beforeend", replyDiv);
                     // 수정 폼 모달에 댓글 내용 넣기
                     document.querySelector("#" + modifyReplyButtonId)
-                        .addEventListener("click", function() {
+                        .addEventListener("click", function () {
                             document.querySelector("#modifyFormModalSubmitButton").setAttribute("data-reply-id", this.dataset.replyId);
                             readReplyAndSetModalForm(this.dataset.replyId);
                         });
@@ -237,7 +262,7 @@
 
                     // 삭제확인 버튼에 replyId 옮기기
                     document.querySelector("#" + removeReplyButtonId)
-                        .addEventListener("click", function() {
+                        .addEventListener("click", function () {
                             // console.log(this.id + "번 삭제버튼 클릭됨");
                             console.log(this.dataset.replyId + "번 댓글 삭제할 예정, 모달 띄움")
                             document.querySelector("#removeConfirmModalSubmitButton").setAttribute("data-reply-id", this.dataset.replyId);
@@ -260,7 +285,7 @@
             .then(() => listReply());
     }
 
-    document.querySelector("#replySendButton1").addEventListener("click", function() {
+    document.querySelector("#replySendButton1").addEventListener("click", function () {
         const boardId = document.querySelector("#boardId").value;
         const content = document.querySelector("#replyInput1").value;
 
@@ -270,11 +295,11 @@
         };
 
         fetch(`\${ctx}/reply/add`, {
-            method : "post",
-            headers : {
-                "Content-Type" : "application/json"
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body : JSON.stringify(data)
+            body: JSON.stringify(data)
         })
             .then(res => res.json())
             .then(data => {

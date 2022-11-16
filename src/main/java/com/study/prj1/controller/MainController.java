@@ -7,14 +7,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MainController {
 
-    @RequestMapping("/")
-    @ResponseBody
+    @RequestMapping("")
     public String home() {
-        return "Welcome Home!!";
-    }
-
-    @RequestMapping("main")
-    public String index() {
-        return "index";
+        return "redirect:/board/list";
     }
 }

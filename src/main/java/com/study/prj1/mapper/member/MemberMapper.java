@@ -6,16 +6,17 @@ import com.study.prj1.domain.member.MemberDto;
 import java.util.List;
 
 public interface MemberMapper {
-
     int insert(MemberDto member);
 
     List<MemberDto> selectAll();
 
-    MemberDto selectOne(String id);
+    MemberDto selectById(String id);
 
     int update(MemberDto member);
 
-    int remove(String id);
+    int deleteById(String id);
 
-    MemberDto getEmail(String email);
+    MemberDto selectByEmail(String email);
+
+    MemberDto selectByNickName(String nickName);
 }

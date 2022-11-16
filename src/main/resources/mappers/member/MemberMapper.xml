@@ -5,53 +5,81 @@
 
 <mapper namespace="com.study.prj1.mapper.member.MemberMapper">
 
-    <select id="getEmail" resultType="com.study.prj1.domain.member.MemberDto">
-        SELECT *
+    <select id="selectByNickName" resultType="com.study.prj1.domain.member.MemberDto">
+        SELECT
+        id,
+        nickName,
+        password,
+        email,
+        inserted
         FROM
-            Member
+        Member
         WHERE
-            email = #{email}
+        nickName = #{nickName}
     </select>
 
-    <delete id="remove">
-        DELETE FROM
-            Member
+    <select id="selectByEmail" resultType="com.study.prj1.domain.member.MemberDto">
+        SELECT
+        id,
+        nickName,
+        password,
+        email,
+        inserted
+        FROM
+        Member
         WHERE
-            id = #{id};
+        email = #{email}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM Member
+        WHERE id = #{id}
     </delete>
 
     <update id="update">
         UPDATE Member
         SET
+        <if test="password != null">
             password = #{password},
-            email = #{email}
+        </if>
+        nickName = #{nickName},
+        email = #{email}
         WHERE
-            id = #{id}
+        id = #{id}
+
     </update>
 
-    <select id="selectOne" resultType="com.study.prj1.domain.member.MemberDto">
+    <select id="selectById" resultType="com.study.prj1.domain.member.MemberDto">
         SELECT
-            *
+        id,
+        nickName,
+        password,
+        email,
+        inserted
         FROM
-            Member
+        Member
         WHERE
-            id = #{id}
+        id = #{id}
+
     </select>
 
     <select id="selectAll" resultType="com.study.prj1.domain.member.MemberDto">
         SELECT
-            id, '**' password, email, inserted
+        id,
+        nickName,
+        '숨김' password,
+        email,
+        inserted
         FROM
-            Member
+        Member
         ORDER BY
-            id
+        id
     </select>
 
     <insert id="insert">
-        INSERT INTO Member (id, password, email)
-        VALUES (#{id}, #{password}, #{email})
+        INSERT INTO Member (id, nickName, password, email)
+        VALUES (#{id}, #{nickName}, #{password}, #{email})
     </insert>
-
 
 
 </mapper>

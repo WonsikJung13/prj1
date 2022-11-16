@@ -5,6 +5,7 @@ import com.study.prj1.domain.board.PageInfo;
 import com.study.prj1.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -112,6 +113,7 @@ public class BoardController {
     }
 
     @GetMapping("modify")
+    @PreAuthorize("@boardSecurity.checkWriter(authentication.name, #id)")
     public void modify(int id, Model model) {
         BoardDto board = service.get(id);
         model.addAttribute("board", board);
@@ -119,6 +121,8 @@ public class BoardController {
     }
 
     @PostMapping("modify")
+    @PreAuthorize("@boardSecurity.checkWriter(authentication.name, #board.id)")
+
     public String modify(
             BoardDto board,
             @RequestParam("files") MultipartFile[] addFiles,
@@ -137,6 +141,8 @@ public class BoardController {
     }
 
     @PostMapping("remove")
+    @PreAuthorize("@boardSecurity.checkWriter(authentication.name, #id)")
+
     public String remove(int id, RedirectAttributes rttr) {
         int cnt = service.remove(id);
 
