@@ -32,6 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = new User(member.getId(), member.getPassword(), List.of());
 
+
         return user;
     }
 }

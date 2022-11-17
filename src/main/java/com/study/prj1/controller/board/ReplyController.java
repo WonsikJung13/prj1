@@ -4,6 +4,8 @@ package com.study.prj1.controller.board;
 import com.study.prj1.domain.board.ReplyDto;
 import com.study.prj1.service.board.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +16,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("reply")
 public class ReplyController {
+
     @Autowired
     private ReplyService service;
 
     @PutMapping("modify")
     @ResponseBody
+    @PreAuthorize("@replySecurity.checkWriter(authentication.name, #reply.id)")
     public Map<String, Object> modify(@RequestBody ReplyDto reply) {
         Map<String, Object> map = new HashMap<>();
 
@@ -41,6 +45,7 @@ public class ReplyController {
 
     @DeleteMapping("remove/{id}")
     @ResponseBody
+    @PreAuthorize("@replySecurity.checkWriter(authentication.name, #id)")
     public Map<String, Object> remove(@PathVariable int id) {
         Map<String, Object> map = new HashMap<>();
 
@@ -55,14 +60,23 @@ public class ReplyController {
 
     @GetMapping("list/{boardId}")
     @ResponseBody
-    public List<ReplyDto> list(@PathVariable int boardId) {
-        return service.listReplyByBoardId(boardId);
+    public List<ReplyDto> list(@PathVariable int boardId, Authentication authentication) {
+
+        String username = "";
+        if (authentication != null) {
+            username = authentication.getName();
+        }
+
+        return service.listReplyByBoardId(boardId, username);
     }
 
     @PostMapping("add")
     @ResponseBody
-    public Map<String, Object> add(@RequestBody ReplyDto reply) {
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, Object> add(@RequestBody ReplyDto reply, Authentication authentication) {
 //		System.out.println(reply);
+        reply.setWriter(authentication.getName());
+
         Map<String, Object> map = new HashMap<>();
 
         int cnt = service.addReply(reply);

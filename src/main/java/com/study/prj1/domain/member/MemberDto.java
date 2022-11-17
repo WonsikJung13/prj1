@@ -2,9 +2,7 @@ package com.study.prj1.domain.member;
 
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Data
 public class MemberDto {
@@ -14,4 +12,10 @@ public class MemberDto {
     private String password;
 
     private LocalDateTime inserted;
+
+    public String getRegDate() {
+        LocalDateTime now = LocalDateTime.now();
+
+        return "inserted.toLocalDate().toString()";
+    }
 }

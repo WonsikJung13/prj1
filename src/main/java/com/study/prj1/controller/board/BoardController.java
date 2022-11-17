@@ -6,16 +6,15 @@ import com.study.prj1.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("board")
@@ -102,10 +101,18 @@ public class BoardController {
     public void get(
             // @RequestParam 생략 가능
             @RequestParam(name = "id") int id,
-            Model model) {
+            Model model,
+            Authentication authentication
+    ) {
+        String username = null;
+
+        if (authentication != null) {
+            username = authentication.getName();
+        }
+
         // req param
         // business logic (게시물 db에서 가져오기)
-        BoardDto board = service.get(id);
+        BoardDto board = service.get(id, username);
         // add attribute
         model.addAttribute("board", board);
         // forward
@@ -122,7 +129,6 @@ public class BoardController {
 
     @PostMapping("modify")
     @PreAuthorize("@boardSecurity.checkWriter(authentication.name, #board.id)")
-
     public String modify(
             BoardDto board,
             @RequestParam("files") MultipartFile[] addFiles,
@@ -142,7 +148,6 @@ public class BoardController {
 
     @PostMapping("remove")
     @PreAuthorize("@boardSecurity.checkWriter(authentication.name, #id)")
-
     public String remove(int id, RedirectAttributes rttr) {
         int cnt = service.remove(id);
 
@@ -155,5 +160,16 @@ public class BoardController {
         }
 
         return "redirect:/board/list";
+    }
+
+    @PutMapping("like")
+    @ResponseBody
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, Object> like(@RequestBody Map<String, String> req,
+                                    Authentication authentication) {
+
+        Map<String, Object> result = service.updateLike(req.get("boardId"), authentication.getName());
+
+        return result;
     }
 }

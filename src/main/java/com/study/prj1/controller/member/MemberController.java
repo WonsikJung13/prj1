@@ -17,8 +17,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("member")
 public class MemberController {
-
-
     @Autowired
     private MemberService service;
 
@@ -118,7 +116,6 @@ public class MemberController {
 
         rttr.addAttribute("id", member.getId());
         boolean passwordMatch = passwordEncoder.matches(oldPassword, oldmember.getPassword());
-
         if (passwordMatch) {
             // 기존 암호가 맞으면 회원 정보 수정
             int cnt = service.modify(member);
@@ -138,7 +135,8 @@ public class MemberController {
     }
 
     @PostMapping("remove")
-    public String remove(String id, String oldPassword, RedirectAttributes rttr, HttpServletRequest request) throws Exception {
+    public String remove(String id, String oldPassword, RedirectAttributes rttr, HttpServletRequest request)
+            throws Exception {
         MemberDto oldmember = service.getById(id);
 
         boolean passwordMatch = passwordEncoder.matches(oldPassword, oldmember.getPassword());

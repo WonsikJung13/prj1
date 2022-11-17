@@ -30,6 +30,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
+                    <th>좋아요</th>
                     <th>제목</th>
                     <th>작성자</th>
                     <th>작성일시</th>
@@ -39,6 +40,7 @@
                 <c:forEach items="${boardList}" var="board">
                     <tr>
                         <td>${board.id }</td>
+                        <td>${board.countLike}</td>
                         <td>
                             <c:url value="/board/get" var="getLink">
                                 <c:param name="id" value="${board.id }"></c:param>

@@ -51,10 +51,11 @@
         b.writer,
         b.inserted,
         COUNT(DISTINCT r.id) countReply,
-        COUNT(DISTINCT f.id) countFile
-        FROM Board b
-        LEFT JOIN Reply r ON b.id = r.boardId
+        COUNT(DISTINCT f.id) countFile,
+        COUNT(DISTINCT l.memberId) countLike
+        FROM Board b LEFT JOIN Reply r ON b.id = r.boardId
         LEFT JOIN File f ON b.id = f.boardId
+        LEFT JOIN BoardLike l ON b.id = l.boardId
         WHERE
 
         <trim prefixOverrides="OR">
@@ -82,15 +83,12 @@
         b.content,
         b.writer,
         b.inserted,
+        (SELECT COUNT(*) FROM BoardLike WHERE boardId = b.id AND memberId = #{username}) liked,
+        (SELECT COUNT(*) FROM BoardLike WHERE boardId = b.id) countLike,
         f.id fileId,
         f.name fileName
-<!--        r.content replyContent-->
-
-<!--        COUNT(DISTINCT r.id) countReply,-->
-<!--        COUNT(DISTINCT f.id) countFile-->
         FROM
         Board b LEFT JOIN File f ON b.id = f.boardId
-<!--                LEFT JOIN Reply r ON b.id = r.boardId-->
         WHERE
         b.id = #{id}
     </select>
@@ -100,15 +98,12 @@
         <result column="title" property="title"/>
         <result column="writer" property="writer"/>
         <result column="content" property="content"/>
+        <result column="liked" property="liked"/>
         <result column="inserted" property="inserted"/>
-<!--        <result column="countReply" property="countReply"/>-->
-<!--        <result column="countFile" property="countFile"/>-->
+        <result column="countLike" property="countLike"/>
         <collection property="fileName" ofType="string">
             <result property="fileName" column="fileName"/>
         </collection>
-<!--        <collection property="replyContent" ofType="string">-->
-<!--            <result property="replyContent" column="replyContent"/>-->
-<!--        </collection>-->
     </resultMap>
 
 
@@ -125,6 +120,45 @@
         DELETE FROM Board
         WHERE id = #{id}
     </delete>
+
+    <select id="getLikeByBoardIdAndMemberId" resultType="int">
+        SELECT COUNT(*) FROM BoardLike
+        WHERE boardId = #{boardId} AND memberId = #{memberId}
+    </select>
+
+    <delete id="deleteLike">
+        DELETE FROM BoardLike
+        WHERE boardId = #{boardId} AND memberId = #{memberId}
+    </delete>
+
+    <insert id="insertLike">
+        INSERT INTO BoardLike (boardId, memberId)
+        VALUES (#{boardId}, #{memberId})
+    </insert>
+
+    <select id="countLikeByBoardId" resultType="int">
+        SELECT COUNT(*) FROM BoardLike
+        WHERE boardId = #{boardId}
+    </select>
+
+    <delete id="deleteLikeByBoardId">
+        DELETE FROM BoardLike
+        WHERE boardId = #{id}
+    </delete>
+
+    <delete id="deleteLikeByMemberId">
+        DELETE FROM BoardLike
+        WHERE memberId = #{id}
+    </delete>
+
+    <select id="listByMemberId" resultType="com.study.prj1.domain.board.BoardDto">
+        SELECT
+        id
+        FROM
+        Board
+        WHERE
+        writer = #{id}
+    </select>
 
 </mapper>
 
