@@ -22,9 +22,18 @@
 <c:url value="/member/login" var="loginLink"/>
 <c:url value="/member/logout" var="logoutLink"/>
 
+<sec:authentication property="name" var="user"/>
+
+<c:url value="/member/info" var="memberInfoLink">
+    <c:param name="id" value="${user}"/>
+</c:url>
+
 <nav class="navbar navbar-expand-md bg-light mb-3">
     <div class="container-md">
-        <a class="navbar-brand" href="${listLink }">게시판</a>
+        <a class="navbar-brand" href="${listLink }">
+            <c:url value="/content/penguin.svg" var="logoLink"/>
+            <img src="${logoLink}" style="height: 40px">
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -39,12 +48,15 @@
                     <li class="nav-item">
                         <a class="nav-link ${active eq 'register' ? 'active' : '' }" href="${registerLink }">게시물 작성</a>
                     </li>
+                </c:if>
+
+                <sec:authorize access="hasAuthority('admin')">
                     <li class="nav-item">
                         <a class="nav-link ${active eq 'memberList' ? 'active' : '' }"
                            href="${memberListLink }">회원목록</a>
                     </li>
+                </sec:authorize>
 
-                </c:if>
 
                 <c:if test="${not loggedIn}">
 
@@ -58,7 +70,11 @@
                     </li>
                 </c:if>
 
+
                 <c:if test="${loggedIn}">
+                    <li class="nav-item">
+                        <a href="${memberInfoLink }" class="nav-link">내 정보</a>
+                    </li>
                     <li class="nav-item">
                         <a href="${logoutLink }" class="nav-link">로그아웃</a>
                     </li>

@@ -6,14 +6,13 @@ import com.study.prj1.service.board.ReplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("reply")
 public class ReplyController {
 
@@ -21,7 +20,6 @@ public class ReplyController {
     private ReplyService service;
 
     @PutMapping("modify")
-    @ResponseBody
     @PreAuthorize("@replySecurity.checkWriter(authentication.name, #reply.id)")
     public Map<String, Object> modify(@RequestBody ReplyDto reply) {
         Map<String, Object> map = new HashMap<>();
@@ -38,13 +36,11 @@ public class ReplyController {
     }
 
     @GetMapping("get/{id}")
-    @ResponseBody
     public ReplyDto get(@PathVariable int id) {
         return service.getById(id);
     }
 
     @DeleteMapping("remove/{id}")
-    @ResponseBody
     @PreAuthorize("@replySecurity.checkWriter(authentication.name, #id)")
     public Map<String, Object> remove(@PathVariable int id) {
         Map<String, Object> map = new HashMap<>();
@@ -59,7 +55,6 @@ public class ReplyController {
     }
 
     @GetMapping("list/{boardId}")
-    @ResponseBody
     public List<ReplyDto> list(@PathVariable int boardId, Authentication authentication) {
 
         String username = "";
@@ -71,7 +66,6 @@ public class ReplyController {
     }
 
     @PostMapping("add")
-    @ResponseBody
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> add(@RequestBody ReplyDto reply, Authentication authentication) {
 //		System.out.println(reply);

@@ -28,7 +28,7 @@ public class ReplyDto {
 
         if (oneDayBefore.isBefore(inserted)) {
             // 하루 차이면 시간을 출력
-            result = inserted.toLocalTime().toString();
+            result = ((inserted.toLocalDate().toString()) + " " + (inserted.toLocalTime().toString()));
         } else if (oneMonthBefore.isBefore(inserted)) {
             // 1달 내이면 n일 전
             result = Period.between(inserted.toLocalDate(), now.toLocalDate())
@@ -45,5 +45,4 @@ public class ReplyDto {
 
         return result;
     }
-
 }

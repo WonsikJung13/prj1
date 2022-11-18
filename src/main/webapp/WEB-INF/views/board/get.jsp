@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Insert title here</title>
+    <title>My First Project</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
@@ -298,9 +298,15 @@
                     const replyDiv = `
 				<div class="list-group-item d-flex">
 					<div class="me-auto">
+                        <div>
+                            <i class="fa-regular fa-user"></i>
+                            \${item.writer}
+                        </div>
+                        <hr>
 						<div>
 							\${item.content}
 						</div>
+<hr>
 							<small class="text-muted">
 								<i class="fa-regular fa-clock"></i>
 								\${item.ago}
@@ -345,30 +351,34 @@
             .then(() => listReply());
     }
 
-    document.querySelector("#replySendButton1").addEventListener("click", function () {
-        const boardId = document.querySelector("#boardId").value;
-        const content = document.querySelector("#replyInput1").value;
+    const replySendButton1 = document.querySelector("#replySendButton1");
+    if (replySendButton1 != null) {
+        document.querySelector("#replySendButton1").addEventListener("click", function () {
+            const boardId = document.querySelector("#boardId").value;
+            const content = document.querySelector("#replyInput1").value;
 
-        const data = {
-            boardId,
-            content
-        };
+            const data = {
+                boardId,
+                content
+            };
 
-        fetch(`\${ctx}/reply/add`, {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then(data => {
-                document.querySelector("#replyInput1").value = "";
-                document.querySelector("#replyMessage1").innerText = data.message;
-                toast.show();
+            fetch(`\${ctx}/reply/add`, {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
             })
-            .then(() => listReply());
-    });
+                .then(res => res.json())
+                .then(data => {
+                    document.querySelector("#replyInput1").value = "";
+                    document.querySelector("#replyMessage1").innerText = data.message;
+                    toast.show();
+                })
+                .then(() => listReply());
+        });
+
+    }
 </script>
 </body>
 </html>

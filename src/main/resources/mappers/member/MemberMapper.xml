@@ -49,19 +49,31 @@
 
     </update>
 
-    <select id="selectById" resultType="com.study.prj1.domain.member.MemberDto">
+    <select id="selectById" resultMap="memberMap">
         SELECT
-        id,
-        nickName,
-        password,
-        email,
-        inserted
+            id,
+            nickName,
+            password,
+            email,
+            inserted,
+            a.auth
         FROM
-        Member
+            Member m LEFT JOIN Authority a ON m.id = a.memberId
         WHERE
-        id = #{id}
+            id = #{id}
 
     </select>
+
+    <resultMap id="memberMap" type="com.study.prj1.domain.member.MemberDto">
+        <id column="id" property="id"/>
+        <result column="nickName" property="nickName"/>
+        <result column="password" property="password"/>
+        <result column="email" property="email"/>
+        <result column="inserted" property="inserted"/>
+        <collection property="auth" ofType="string">
+            <result column="auth" property="auth"/>
+        </collection>
+    </resultMap>
 
     <select id="selectAll" resultType="com.study.prj1.domain.member.MemberDto">
         SELECT

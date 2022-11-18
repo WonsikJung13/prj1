@@ -3,6 +3,7 @@ package com.study.prj1.domain.member;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class MemberDto {
@@ -13,9 +14,21 @@ public class MemberDto {
 
     private LocalDateTime inserted;
 
-    public String getRegDate() {
-        LocalDateTime now = LocalDateTime.now();
+    private List<String> auth;
 
-        return "inserted.toLocalDate().toString()";
+    public String getDate() {
+        String result = "";
+
+        result = inserted.toLocalDate().toString();
+
+        return result;
+    }
+
+    public String getDatetime() {
+        String result = "";
+
+        result = ((inserted.toLocalDate().toString()) + " " + (inserted.toLocalTime().toString()));
+
+        return result;
     }
 }

@@ -30,7 +30,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>좋아요</th>
+                    <th><i class="fa-regular fa-thumbs-up"></i></th>
                     <th>제목</th>
                     <th>작성자</th>
                     <th>작성일시</th>
@@ -40,7 +40,10 @@
                 <c:forEach items="${boardList}" var="board">
                     <tr>
                         <td>${board.id }</td>
-                        <td>${board.countLike}</td>
+                        <td>
+                            <i class="fa-regular fa-heart"></i>
+                                ${board.countLike}
+                        </td>
                         <td>
                             <c:url value="/board/get" var="getLink">
                                 <c:param name="id" value="${board.id }"></c:param>
@@ -153,6 +156,8 @@
         </div>
     </div>
 </div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 </body>
 </html>
