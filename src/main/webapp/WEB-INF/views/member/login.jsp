@@ -49,7 +49,7 @@
                 <div class="d-grid gap-2 col-6 mx-auto">
                     <button class="btn btn-primary" type="submit">로그인</button>
                 </div>
-                <p class="text-center" style="margin-top:20px">회원이 아니신가요? <a href="signup">회원가입 하러가기!</a></p>
+
             </form>
 
         </div>
