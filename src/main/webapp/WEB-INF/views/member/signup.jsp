@@ -198,6 +198,7 @@ function matchPassword() {
 	if (value1 == value2) {
 		passwordText1.innerText = "패스워드가 일치합니다.";
 		availablePassword = true;
+
 	} else {
 		passwordText1.innerText = "패스워드가 일치하지 않습니다.";
 	}
